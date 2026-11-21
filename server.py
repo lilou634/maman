@@ -14,6 +14,7 @@ import json
 import os
 import re
 import ssl
+import sys
 import threading
 import time
 import urllib.request
@@ -177,6 +178,11 @@ def get_news(force=False):
 # ---------- serveur web ----------
 
 class Handler(SimpleHTTPRequestHandler):
+    # Windows lit parfois de mauvais types de fichiers dans le registre : on les fixe ici
+    extensions_map = {**SimpleHTTPRequestHandler.extensions_map,
+                      ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
+                      ".css": "text/css; charset=utf-8", ".json": "application/json", ".svg": "image/svg+xml"}
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=PUBLIC, **kwargs)
 
@@ -207,14 +213,33 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 def main():
+    # Console Windows : évite un plantage sur les accents et émojis
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
     p = argparse.ArgumentParser(description="NeuroPlay en local")
     p.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8000)))
     p.add_argument("--no-browser", action="store_true", help="ne pas ouvrir le navigateur")
     args = p.parse_args()
 
-    server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
-    url = f"http://localhost:{args.port}"
-    print(f"\n  🧠 NeuroPlay tourne sur {url}\n  (Ctrl+C pour arrêter)\n")
+    server = None
+    for port in range(args.port, args.port + 10):  # si le port est pris, on essaie le suivant
+        try:
+            server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+            break
+        except OSError:
+            print(f"  Le port {port} est déjà utilisé, essai du suivant...")
+    if server is None:
+        print("  Impossible de trouver un port libre. Fermez les autres fenêtres NeuroPlay et réessayez.")
+        sys.exit(1)
+
+    url = f"http://localhost:{port}"
+    print(f"\n  NeuroPlay tourne sur {url}")
+    print("  Laissez cette fenêtre ouverte pendant que vous utilisez le site.")
+    print("  (Ctrl+C ou fermer la fenêtre pour arrêter)\n")
     threading.Thread(target=get_news, daemon=True).start()  # précharge les actus
     if not args.no_browser:
         threading.Timer(0.8, lambda: webbrowser.open(url)).start()
