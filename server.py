@@ -223,7 +223,20 @@ def main():
     p = argparse.ArgumentParser(description="NeuroPlay en local")
     p.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8000)))
     p.add_argument("--no-browser", action="store_true", help="ne pas ouvrir le navigateur")
+    p.add_argument("--export", metavar="FICHIER",
+                   help="écrit les actualités dans un fichier JSON puis s'arrête (pour la version en ligne)")
     args = p.parse_args()
+
+    if args.export:
+        data = collect_news()
+        with open(args.export, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False)
+        ok = sum(1 for s in data["sources"] if s["ok"])
+        print(f"  {len(data['items'])} articles, {ok}/{len(data['sources'])} sources -> {args.export}")
+        for s in data["sources"]:
+            if not s["ok"]:
+                print(f"  - {s['name']} : {s['error']}")
+        return
 
     server = None
     for port in range(args.port, args.port + 10):  # si le port est pris, on essaie le suivant

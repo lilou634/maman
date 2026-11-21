@@ -60,11 +60,13 @@
   ];
 
   /* ---------- actualités ---------- */
-  let news = null, newsPromise = null, newsError = null;
+  let news = null, newsPromise = null, newsError = null, staticNews = false;
   const loadNews = (force) => {
     if (newsPromise && !force) return newsPromise;
-    newsPromise = fetch("/api/news" + (force ? "?force=1" : ""))
-      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    // En local : le serveur Python (api/news). En ligne : le fichier news.json, régénéré toutes les heures.
+    const get = (url) => fetch(url, { cache: "no-store" }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+    newsPromise = (staticNews ? Promise.reject() : get("api/news" + (force ? "?force=1" : "")))
+      .catch(() => get("news.json?t=" + Date.now()).then(d => { staticNews = true; return d; }))
       .then(d => { news = d; newsError = null; updateNewBadge(); return d; })
       .catch(e => { newsError = e; throw e; });
     return newsPromise;
@@ -109,7 +111,7 @@
   };
   const newsUnavailable = () => `<div class="card empty">
       <p><b>Les actualités ne sont pas disponibles.</b></p>
-      <p class="small">Le site doit être lancé avec le petit serveur : ouvrez un terminal dans le dossier <code>maman</code> et tapez <code>python3 server.py</code> (sur Windows : <code>python server.py</code>), puis allez sur <a href="http://localhost:8000">http://localhost:8000</a>. Vérifiez aussi la connexion Internet.</p></div>`;
+      <p class="small">En ligne, réessayez dans quelques minutes. En local, le site doit être lancé avec le petit serveur : ouvrez un terminal dans le dossier <code>maman</code> et tapez <code>python3 server.py</code> (sur Windows : <code>python server.py</code>), puis allez sur <a href="http://localhost:8000">http://localhost:8000</a>. Vérifiez aussi la connexion Internet.</p></div>`;
 
   /* ---------- pages ---------- */
   const nextLesson = () => NEURO.lessons.find(l => !S.lessons[l.id]?.read) || NEURO.lessons[0];
@@ -260,7 +262,7 @@
     app.innerHTML = `
       <div class="section-head"><h1 style="margin:0">Actualités du cerveau</h1>
         <button class="btn ghost" id="refresh">↻ Actualiser</button></div>
-      <p class="lead">Les derniers articles de plusieurs sites, mis à jour automatiquement toutes les 20 minutes. Les articles parus depuis votre dernière visite sont marqués <span class="new">Nouveau</span>.</p>
+      <p class="lead">Les derniers articles de plusieurs sites, mis à jour automatiquement (toutes les 20 minutes en local, toutes les heures en ligne). Les articles parus depuis votre dernière visite sont marqués <span class="new">Nouveau</span>.</p>
       <div class="toolbar">
         <button class="chip" data-lang="all">Tout</button>
         <button class="chip" data-lang="fr">🇫🇷 Français</button>
