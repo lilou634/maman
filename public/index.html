@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NeuroPlay</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="#/" class="brand"><span class="brand-icon">🧠</span> NeuroPlay</a>
+    <nav class="nav" id="nav">
+      <a href="#/" data-route="">Accueil</a>
+      <a href="#/apprendre" data-route="apprendre">Apprendre</a>
+      <a href="#/jeux" data-route="jeux">Mini-jeux</a>
+      <a href="#/actus" data-route="actus">Actus <span class="pill" id="nav-new" hidden></span></a>
+      <a href="#/ressources" data-route="ressources">Ressources</a>
+    </nav>
+    <div class="level" id="level" title="Votre progression">
+      <span class="level-name" id="level-name"></span>
+      <span class="xpbar"><span id="xpfill"></span></span>
+    </div>
+    <button class="theme-btn" id="theme-btn" aria-label="Changer de thème" title="Clair / sombre">🌓</button>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="foot">
+    NeuroPlay · site personnel en local · les actualités viennent de leurs sites d'origine.
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="games.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

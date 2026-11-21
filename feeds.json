@@ -1,0 +1,56 @@
+[
+  {
+    "id": "gnews-neuro-fr",
+    "name": "Google Actualités · neurosciences",
+    "lang": "fr",
+    "url": "https://news.google.com/rss/search?q=neurosciences+OR+neuroscience&hl=fr&gl=FR&ceid=FR:fr"
+  },
+  {
+    "id": "gnews-cerveau-fr",
+    "name": "Google Actualités · cerveau",
+    "lang": "fr",
+    "url": "https://news.google.com/rss/search?q=cerveau+%C3%A9tude+chercheurs&hl=fr&gl=FR&ceid=FR:fr"
+  },
+  {
+    "id": "conversation-fr",
+    "name": "The Conversation France",
+    "lang": "fr",
+    "url": "https://news.google.com/rss/search?q=site:theconversation.com/fr+cerveau+OR+neurosciences&hl=fr&gl=FR&ceid=FR:fr"
+  },
+  {
+    "id": "cerveau-psycho",
+    "name": "Cerveau & Psycho",
+    "lang": "fr",
+    "url": "https://news.google.com/rss/search?q=site:cerveauetpsycho.fr&hl=fr&gl=FR&ceid=FR:fr"
+  },
+  {
+    "id": "inserm",
+    "name": "Inserm",
+    "lang": "fr",
+    "url": "https://news.google.com/rss/search?q=site:inserm.fr+cerveau+OR+neurosciences&hl=fr&gl=FR&ceid=FR:fr"
+  },
+  {
+    "id": "sciences-avenir",
+    "name": "Sciences et Avenir · Cerveau et psy",
+    "lang": "fr",
+    "url": "https://www.sciencesetavenir.fr/sante/cerveau-et-psy/rss.xml"
+  },
+  {
+    "id": "sciencedaily",
+    "name": "ScienceDaily · Mind & Brain",
+    "lang": "en",
+    "url": "https://www.sciencedaily.com/rss/mind_brain.xml"
+  },
+  {
+    "id": "neurosciencenews",
+    "name": "Neuroscience News",
+    "lang": "en",
+    "url": "https://neurosciencenews.com/feed/"
+  },
+  {
+    "id": "transmitter",
+    "name": "The Transmitter",
+    "lang": "en",
+    "url": "https://www.thetransmitter.org/feed/"
+  }
+]
